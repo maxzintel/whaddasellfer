@@ -54,18 +54,23 @@ Options considered:
 ```ruby
 def self.for_date!(date)
   find_by(puzzle_date: date) || create_with_listings!(date)   # transaction: puzzle + 5 puzzle_listings
-rescue ActiveRecord::RecordNotUnique
-  find_by!(puzzle_date: date)                                  # loser re-reads the winner's row
+rescue ActiveRecord::RecordNotUnique                           # lost the race at the unique index
+  find_by!(puzzle_date: date)
+rescue ActiveRecord::RecordInvalid => e                        # lost the race at the uniqueness validation
+  raise unless e.record.errors.of_kind?(:puzzle_date, :taken)
+  find_by!(puzzle_date: date)
 end
 ```
 
 1. A and B both run `find_by` and get nothing.
 2. A opens its transaction first and takes SQLite's write lock (`BEGIN IMMEDIATE`). B waits (up to `timeout: 5000`ms).
 3. A inserts the puzzle and its 5 listings, then commits.
-4. B gets the lock and inserts a puzzle with the same `puzzle_date`. The unique index rejects it with `RecordNotUnique`. B's whole transaction rolls back, so B leaves no half-built puzzle or orphaned rows.
+4. B gets the lock. Usually, B's `validates :puzzle_date, uniqueness: true` check now sees A's committed row, so B fails with `RecordInvalid` (`:taken`). If the timing is tighter (both pass the validation before either inserts), the unique index rejects B's insert with `RecordNotUnique`. Either way, B's whole transaction rolls back, so B leaves no half-built puzzle or orphaned rows.
 5. B's `rescue` runs `find_by!` and gets A's puzzle. **Both games use the same 5 cars.**
 
-The `rescue` sits *outside* the transaction on purpose. On Postgres, a failed statement poisons the rest of its transaction, so the re-read must happen after the rollback. Writing it this way keeps it portable. Racers may each *pick* different cars, but only the committed pick survives. Test: stub the first `find_by` to return nil after another puzzle has been inserted, then assert the existing puzzle comes back and only one puzzle exists. (Real threads plus SQLite plus parallel tests would be flaky.)
+*Correction found in Lane A:* the first draft rescued only `RecordNotUnique`. That would have turned the common case (step 4, validation path) into a 500. Lane A rescues both errors, with a test for each path. Any other validation error still raises.
+
+The `rescue` sits *outside* the transaction on purpose. On Postgres, a failed statement poisons the rest of its transaction, so the re-read must happen after the rollback. Writing it this way keeps it portable. Racers may each *pick* different cars, but only the committed pick survives. Tests stub the first `find_by` to return nil after another puzzle has been inserted, then assert the existing puzzle comes back and only one puzzle exists (real threads plus SQLite plus parallel tests would be flaky).
 
 **Picking the 5:** random sample of listings **not used in any earlier puzzle**. If fewer than 5 unused remain, fall back to all listings. 200 listings / 5 = 40 days before any repeat. It costs one `where.not`, so it's included (D2).
 
