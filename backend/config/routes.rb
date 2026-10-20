@@ -12,5 +12,8 @@ Rails.application.routes.draw do
       post "rounds/:position/guess", to: "guesses#create", as: :guess
     end
     get "leaderboard", to: "leaderboards#show"
+
+    # Local testing tools (frontend dev toolbar). Never drawn in production.
+    post "dev/reset_today", to: "dev#reset_today" if Rails.env.local?
   end
 end

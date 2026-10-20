@@ -11,6 +11,7 @@ import {
   savePlayerName,
   submitGuess,
 } from './api'
+import DevToolbar from './components/DevToolbar'
 import ResultsScreen from './components/ResultsScreen'
 import RevealScreen from './components/RevealScreen'
 import RoundScreen from './components/RoundScreen'
@@ -198,6 +199,8 @@ export default function App() {
       </header>
 
       {content}
+
+      {import.meta.env.DEV && <DevToolbar />}
     </>
   )
 }

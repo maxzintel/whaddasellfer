@@ -63,3 +63,9 @@ export type Leaderboard = {
 }
 
 export type ApiError = { error: string }
+
+// Dev toolbar only (POST /api/dev/reset_today exists in development and test, never production).
+export type DevResetResult = {
+  puzzle_date: string
+  games_deleted: number
+}
