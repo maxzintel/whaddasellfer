@@ -64,3 +64,23 @@ Auth/accounts, Action Cable/real-time, Redux or any state library, react-router,
 - Keep diffs focused. Don't refactor or reformat files outside the current slice.
 - If something is ambiguous, ask one question rather than guessing big.
 - Don't edit NOTES.md; the human maintains it.
+
+## Feature & Other Ideas:
+1. Like Wordle, every 'day' should be the same 5 cars for everyone
+2. You can play without an account, but you can't track stats without one
+3. Prevent users from playing other 'days' games (potential reach feature would be premium users who can play past games)
+
+## Ambitious Additions:
+1. When the price is revealed, show comparable sales: “7 other E46 M3s (±3 years) sold for a median of $27,800. This one went 13% over.” At the end of the game, add a calibration readout: “You guessed 14% high on average. Your worst miss was the 911 SC at 41% off.”
+
+Why this one over the alternatives:
+
+It turns a guessing game into a market-sense tool. That’s the actual MaxFindsCars thesis, and it’s the most on-domain thing you could show an auction company.
+It’s all deterministic Rails: a comps scope (same make/model, year window, excluding this listing), a median computed in Ruby (SQLite has no median), and calibration as the average log-ratio of the guesses. None of it touches the core loop, and it’s straightforward to test.
+It has real edge cases to discuss: zero comps, one comp, comps outliers.
+
+2. Social virality stuff
+  - sharing with some sort of tile thing like wordle
+3. Hardening & polish
+  - make sure the same auction isn't used more than once
+  -
