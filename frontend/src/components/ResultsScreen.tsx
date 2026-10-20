@@ -1,6 +1,7 @@
 import { formatMoney, formatPctOff, formatPoints, formatPuzzleDate } from '../format'
 import type { Game, Leaderboard as LeaderboardData } from '../types'
 import Leaderboard from './Leaderboard'
+import ShareCard from './ShareCard'
 
 type Props = {
   game: Game
@@ -54,6 +55,8 @@ export default function ResultsScreen({ game, leaderboard, leaderboardError }: P
             </tbody>
           </table>
         </div>
+
+        <ShareCard game={game} />
 
         <footer>
           <p>New cars tomorrow at midnight ET.</p>
