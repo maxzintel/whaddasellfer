@@ -1,0 +1,99 @@
+/* Small additions on top of Pico classless (loaded from the CDN in index.html). */
+
+.gallery {
+  margin-bottom: var(--pico-spacing);
+}
+
+.gallery-main {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--pico-border-radius);
+  background: var(--pico-muted-border-color);
+}
+
+.gallery-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Reset Pico's button look so thumbnails read as images. */
+.gallery-thumbs .gallery-thumb {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  border: 2px solid transparent;
+  border-radius: var(--pico-border-radius);
+  background: none;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.gallery-thumb img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  opacity: 0.7;
+}
+
+.gallery-thumb[aria-pressed='true'] {
+  border-color: var(--pico-primary);
+}
+
+.gallery-thumb[aria-pressed='true'] img,
+.gallery-thumb:hover img {
+  opacity: 1;
+}
+
+.specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.specs dt {
+  font-size: 0.875em;
+  color: var(--pico-muted-color);
+  font-weight: normal;
+}
+
+.specs dd {
+  margin: 0;
+}
+
+.highlights {
+  white-space: pre-line;
+}
+
+.big-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.big-number small {
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--pico-muted-color);
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+tr.you td {
+  background: var(--pico-mark-background-color);
+  color: var(--pico-mark-color);
+}
+
+form button[type='submit'] {
+  width: 100%;
+}
