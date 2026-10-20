@@ -74,7 +74,7 @@ class GameApiTest < ActionDispatch::IntegrationTest
   end
 
   test "bad player names are 422" do
-    [ "", "   ", "x" * 31, nil ].each do |name|
+    [ "", "   ", "x" * 31, nil, [ "a" ], { "a" => 1 } ].each do |name|
       post "/api/games", params: { player_name: name }, as: :json
 
       assert_response :unprocessable_content, "name #{name.inspect}"
