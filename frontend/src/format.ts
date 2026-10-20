@@ -43,7 +43,9 @@ export function formatSoldDate(iso: string): string {
 // Spec values arrive lowercase ("manual", "suv", "clean (ca)").
 export function formatSpec(value: string): string {
   if (value.toLowerCase() === 'suv') return 'SUV'
-  return value.charAt(0).toUpperCase() + value.slice(1)
+  // Title status carries a state/province code: "clean (ca)" -> "Clean (CA)".
+  const withCodes = value.replace(/\(([a-z]{2})\b/g, (_, code: string) => `(${code.toUpperCase()}`)
+  return withCodes.charAt(0).toUpperCase() + withCodes.slice(1)
 }
 
 // "$25,000", "25000" and "25,000.00" all mean 25000: ignore any cents, then drop everything
