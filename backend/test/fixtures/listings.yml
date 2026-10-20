@@ -1,0 +1,21 @@
+# Seven listings: enough for one 5-car puzzle plus spares for "skip used cars" tests.
+<% %w[jimny mgb xj6c e46 nsx bronco miata].each_with_index do |name, i| %>
+<%= name %>:
+  source_id: "fixture-<%= i + 1 %>"
+  year: <%= 1980 + i %>
+  make: Make<%= i + 1 %>
+  model: Model <%= name %>
+  title: "<%= 1980 + i %> Make<%= i + 1 %> Model <%= name %>"
+  mileage: <%= 10_000 * (i + 1) %>
+  transmission: manual
+  body_style: coupe
+  exterior_color: red
+  interior_color: black
+  title_status: <%= i.even? ? "null" : '"clean (tx)"' %>
+  highlights: "Fixture highlights for <%= name %>."
+  image_urls: <%= ["https://example.com/#{name}/1.jpg", "https://example.com/#{name}/2.jpg"].to_json %>
+  sold_price: <%= 10_000 * (i + 1) %>
+  sold_at: 2026-01-0<%= i + 1 %> 20:00:00 -0500
+  source: Bring a Trailer
+  source_url: "https://example.com/listing/<%= name %>"
+<% end %>
