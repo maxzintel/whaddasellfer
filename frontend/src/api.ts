@@ -1,5 +1,5 @@
 // Every network call and every localStorage access goes through this file.
-import type { Game, Leaderboard } from './types'
+import type { DevResetResult, Game, Leaderboard } from './types'
 
 // An API failure. `status` is the HTTP status, or 0 when the server couldn't be reached.
 export class HttpError extends Error {
@@ -61,6 +61,9 @@ export const submitGuess = (token: string, position: number, guess: number) =>
 export const getLeaderboard = (token?: string) =>
   request<Leaderboard>('GET', token ? `/api/leaderboard?token=${enc(token)}` : '/api/leaderboard')
 
+// Dev toolbar only: the route doesn't exist in production.
+export const devResetToday = () => request<DevResetResult>('POST', '/api/dev/reset_today')
+
 // --- localStorage (any access can throw, e.g. in private mode or with storage blocked) ---
 
 const GAME_KEY = 'wisf.game'
@@ -90,6 +93,14 @@ export function saveGame(token: string): void {
 export function clearSavedGame(): void {
   try {
     localStorage.removeItem(GAME_KEY)
+  } catch {
+    // Nothing to clear.
+  }
+}
+
+export function clearPlayerName(): void {
+  try {
+    localStorage.removeItem(NAME_KEY)
   } catch {
     // Nothing to clear.
   }

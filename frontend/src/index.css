@@ -97,3 +97,21 @@ tr.you td {
 form button[type='submit'] {
   width: 100%;
 }
+
+/* Dev toolbar (development builds only). */
+.dev-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px dashed var(--pico-muted-border-color, #ccc);
+  border-radius: 0.5rem;
+}
+.dev-toolbar button {
+  width: auto;
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+}

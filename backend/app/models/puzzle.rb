@@ -24,6 +24,38 @@ class Puzzle < ApplicationRecord
     find_by!(puzzle_date: date)
   end
 
+  # Local testing only: deletes the day's puzzle with its games and rounds, so the next
+  # game builds a fresh puzzle and the leaderboard starts empty. Returns games deleted.
+  def self.reset_day!(date)
+    ensure_local!
+    puzzle = find_by(puzzle_date: date)
+    return 0 unless puzzle
+
+    transaction do
+      deleted = puzzle.games.destroy_all.size
+      puzzle.destroy!
+      deleted
+    end
+  end
+
+  # Local testing only: deletes every puzzle, game and round (listings stay), which also
+  # makes every car "unused" again. Returns games deleted.
+  def self.reset_all!
+    ensure_local!
+    transaction do
+      deleted = Game.count
+      Round.delete_all
+      Game.delete_all
+      PuzzleListing.delete_all
+      delete_all
+      deleted
+    end
+  end
+
+  def self.ensure_local!
+    raise "Puzzle resets are for development and test only" unless Rails.env.local?
+  end
+
   def self.create_with_listings!(date)
     transaction do
       puzzle = create!(puzzle_date: date)
@@ -46,5 +78,5 @@ class Puzzle < ApplicationRecord
 
     picked.shuffle
   end
-  private_class_method :create_with_listings!, :pick_listings
+  private_class_method :create_with_listings!, :pick_listings, :ensure_local!
 end

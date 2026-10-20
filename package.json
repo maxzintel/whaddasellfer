@@ -5,6 +5,8 @@
   "scripts": {
     "setup": "bin/setup",
     "dev": "bin/dev",
+    "reset": "cd backend && bin/rails game:reset_today",
+    "reset:all": "cd backend && bin/rails game:reset_all",
     "test": "cd backend && bin/rails test",
     "lint": "npm --prefix frontend run lint",
     "build": "npm --prefix frontend run build",
