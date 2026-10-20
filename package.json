@@ -1,0 +1,13 @@
+{
+  "name": "whaddasellfer",
+  "private": true,
+  "description": "Root task runner. No dependencies here; the apps live in backend/ (Rails) and frontend/ (Vite + React).",
+  "scripts": {
+    "setup": "bin/setup",
+    "dev": "bin/dev",
+    "test": "cd backend && bin/rails test",
+    "lint": "npm --prefix frontend run lint",
+    "build": "npm --prefix frontend run build",
+    "check": "npm test && npm run lint && npm run build"
+  }
+}

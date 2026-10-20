@@ -1,0 +1,6 @@
+# Sourced by bin/setup and bin/dev: puts the pinned Ruby and Node on PATH.
+export PATH="/home/linuxbrew/.linuxbrew/opt/ruby@3.4/bin:/home/linuxbrew/.linuxbrew/lib/ruby/gems/3.4.0/bin:$PATH"
+if [[ -s "$HOME/.nvm/nvm.sh" ]]; then
+  source "$HOME/.nvm/nvm.sh"
+  nvm use --silent >/dev/null || nvm install "$(cat .nvmrc)"
+fi

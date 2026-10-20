@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# One-time (and idempotent) setup: checks tool versions, installs dependencies, prepares the DB.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+source bin/env
+
+want_ruby=$(sed 's/^ruby-//' backend/.ruby-version)
+want_node=$(cat .nvmrc)
+have_ruby=$(ruby -e 'print RUBY_VERSION')
+have_node=$(node -v | sed 's/^v//')
+
+[[ "$have_ruby" == "$want_ruby" ]] || { echo "Ruby $want_ruby required, found $have_ruby ($(command -v ruby))"; exit 1; }
+[[ "$have_node" == "$want_node" ]] || { echo "Node $want_node required, found $have_node. Run: nvm install $want_node"; exit 1; }
+echo "✓ Ruby $have_ruby, Node $have_node"
+
+echo "== backend: bundle install + db:prepare"
+(cd backend && bundle install --quiet && bin/rails db:prepare)
+
+echo "== frontend: npm ci"
+(cd frontend && npm ci --no-audit --no-fund)
+
+echo "✓ Setup done. Start both servers with: npm run dev"
