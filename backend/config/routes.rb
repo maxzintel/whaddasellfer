@@ -7,5 +7,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     get "hello", to: "hello#show"
+
+    resources :games, only: [ :create, :show ], param: :token do
+      post "rounds/:position/guess", to: "guesses#create", as: :guess
+    end
+    get "leaderboard", to: "leaderboards#show"
   end
 end
